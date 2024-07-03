@@ -1,6 +1,7 @@
 package main
 
 import (
+	models "awesomeProject1/internal/model"
 	"awesomeProject1/internal/routers"
 	"awesomeProject1/pkg/setting"
 	"fmt"
@@ -10,6 +11,7 @@ import (
 
 func init() {
 	setting.Setup() // 初始化ini
+	models.Setup()  // 初始化数据库
 }
 
 func main() {
