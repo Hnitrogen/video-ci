@@ -25,9 +25,9 @@ func Login(context *gin.Context) {
 	password := context.PostForm("password")
 
 	if models.CheckUser(username, password) {
-		resp.Response(http.StatusOK, 200, "登录成功", "")
+		resp.Response(http.StatusOK, "登录成功", "")
 	} else {
-		resp.Response(http.StatusUnauthorized, 401, "账号或密码错误", "")
+		resp.Response(http.StatusUnauthorized, "账号或密码错误", "")
 	}
 }
 
@@ -39,12 +39,12 @@ func CreateUser(context *gin.Context) {
 	password := context.PostForm("password")
 
 	if username == "" || password == "" {
-		resp.Response(http.StatusInternalServerError, 500, "参数校验失败", "")
+		resp.Response(http.StatusInternalServerError, "参数校验失败", "")
 		log.Printf("参数为空: username = %s , password = %s", username, password)
 		return
 	}
 
 	models.AddUser(username, password)
-	resp.Response(http.StatusCreated, 200, "创建成功", "")
+	resp.Response(http.StatusCreated, "创建成功", "")
 	return
 }

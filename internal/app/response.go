@@ -8,15 +8,13 @@ type Gin struct {
 }
 
 type Response struct {
-	Code int         `json:"code"`
 	Msg  string      `json:"msg"`
 	Data interface{} `json:"data"`
 }
 
 // Response setting gin.JSON
-func (g *Gin) Response(httpCode, code int, Msg string, data interface{}) {
+func (g *Gin) Response(httpCode int, Msg string, data interface{}) {
 	g.C.JSON(httpCode, Response{
-		Code: code,
 		Msg:  Msg,
 		Data: data,
 	})
