@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"awesomeProject1/internal/service/upload_services"
+	"awesomeProject1/internal/service/file_services"
 	"awesomeProject1/internal/service/user_services"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -24,9 +24,15 @@ func InitRouter() *gin.Engine {
 	// UploadRouters
 	upload := r.Group("/upload")
 	{
-		upload.POST("/", upload_services.UploadImg)
-		upload.POST("/chunk", upload_services.UploadFileChunk)
-		upload.GET("/merge", upload_services.MergeFileChunk)
+		upload.POST("/", file_services.UploadImg)
+		upload.POST("/chunk", file_services.UploadFileChunk)
+		upload.GET("/merge", file_services.MergeFileChunk)
+	}
+
+	// DownloadRouters
+	download := r.Group("/download")
+	{
+		download.GET("/img", file_services.DownloadImg)
 	}
 	return r
 }

@@ -1,8 +1,7 @@
-package upload_services
+package file_services
 
 import (
 	"awesomeProject1/internal/app"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
@@ -95,9 +94,11 @@ func MergeFileChunk(c *gin.Context) {
 	defer distFile.Close()
 
 	//merge chunks
-	for idx, file := range filelist {
-		fmt.Printf("copy idx = %v --- filename = %v\n", idx, file.Name())
-
+	for _, file := range filelist {
+		//fmt.Printf("copy idx = %v --- filename = %v\n", idx, file.Name())
+		if file.Name() == "dist.mp4" {
+			break // defend re-get
+		}
 		chunk, _ := os.Open(filepath.Join(chunkPath, file.Name()))
 		io.Copy(distFile, chunk)
 		chunk.Close()
