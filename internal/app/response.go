@@ -1,6 +1,9 @@
 package app
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"log"
+)
 
 // 封装一下响应
 type Gin struct {
@@ -18,5 +21,6 @@ func (g *Gin) Response(httpCode int, Msg string, data interface{}) {
 		Msg:  Msg,
 		Data: data,
 	})
+	log.Printf("--- %s: %s", Msg, data)
 	return
 }
