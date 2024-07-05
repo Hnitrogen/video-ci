@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdn.bootcdn.net/ajax/libs/spark-md5/3.0.2/spark-md5.min.js"></script>
+    <title>Chunked Upload Example</title>
+</head>
+
+<body>
+<h1>Chunked Upload Example</h1>
+
+<input type="file" id="fileInput" />
+<button onclick="uploadFile()">Upload</button>
+
+<script>
+    function getDictSort(n) {
+        const ret = [];
+        let number = 1;
+        for (let i = 0; i < n; i++) {
+            ret.push(number);
+            if (number * 10 <= n) {
+                number *= 10;
+            } else {
+                while (number % 10 === 9 || number + 1 > n) {
+                    number = Math.floor(number / 10);
+                }
+                number++;
+            }
+        }
+        return ret;
+    }
+
+
+    function uploadFile() {
+        var fileInput = document.getElementById('fileInput');
+        var file = fileInput.files[0];
+
+        var chunkSize = 1024 * 1024; // 1MB chunk size
+        var totalChunks = Math.ceil(file.size / chunkSize);
+        var sort_num = getDictSort(totalChunks + 1)
+        var currentChunk = 0;
+
+        var start = 0;
+        var end = Math.min(chunkSize, file.size);
+
+        var uploadChunk = function (idx, fileMD5) {
+            var chunk = file.slice(start, end);
+            var formData = new FormData();
+            formData.append('chunk', chunk);
+            // console.log(sort_num[idx])
+            formData.append('idx', sort_num[idx]);
+            formData.append('md5', fileMD5)
+
+
+            // Send the chunk to the server using AJAX or fetch API
+            // Replace 'upload-url' with the actual URL to handle the chunk upload on the server
+            fetch('http://localhost:9999/upload/chunk', {
+                method: 'POST',
+                body: formData
+            })
+                .then(function (response) {
+                    // Handle the response
+                    if (currentChunk < totalChunks - 1) {
+                        // Upload the next chunk
+                        currentChunk++;
+                        start = end;
+                        end = Math.min(start + chunkSize, file.size);
+                        uploadChunk(currentChunk, fileMD5);
+                    } else {
+                        // All chunks uploaded
+                        console.log('File upload complete');
+                    }
+                })
+                .catch(function (error) {
+                    // Handle errors
+                    console.error('Upload error:', error);
+                });
+        };
+
+        // console.log(sort_num)
+        var timestamp = new Date().getTime()
+        console.log(file.name, timestamp)
+        // start upload chunk
+        uploadChunk(0, timestamp);
+    }
+</script>
+</body>
+
+</html>
