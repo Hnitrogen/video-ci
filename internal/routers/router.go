@@ -30,9 +30,9 @@ func InitRouter() *gin.Engine {
 	}
 
 	// DownloadRouters
-	download := r.Group("/download")
-	{
-		download.GET("/img", file_services.DownloadImg)
-	}
+	//download := r.Group("/download")
+	//{
+	//	download.GET("/img", file_services.DownloadImg)
+	//}
 	return r
 }
