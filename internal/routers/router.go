@@ -29,6 +29,7 @@ func InitRouter() *gin.Engine {
 		upload.POST("/", file_services.UploadImg)
 		upload.POST("/chunk", file_services.UploadFileChunk)
 		upload.GET("/merge", file_services.MergeFileChunk)
+		upload.GET("/clean", file_services.CleanChunk)
 	}
 
 	// DownloadRouters

@@ -37,6 +37,7 @@ func UploadImg(c *gin.Context) {
 	return
 }
 
+// Post -> Mkdir{md5}
 func UploadFileChunk(c *gin.Context) {
 	resp := app.Gin{C: c}
 	file, _, err := c.Request.FormFile("chunk")
@@ -79,6 +80,7 @@ func UploadFileChunk(c *gin.Context) {
 	resp.Response(http.StatusOK, "分片保存成功", "")
 }
 
+// GET -> params=?chunkPath={chunkPath}
 func MergeFileChunk(c *gin.Context) {
 	resp := app.Gin{C: c}
 	chunkPath := c.Query("chunkPath")
@@ -110,5 +112,23 @@ func MergeFileChunk(c *gin.Context) {
 	}
 
 	resp.Response(http.StatusOK, "合并成功", "")
+	return
+}
+
+func CleanChunk(c *gin.Context) {
+	resp := app.Gin{C: c}
+	chunkPath := c.Query("chunkPath")
+	filelist, err := os.ReadDir(chunkPath)
+	if err != nil {
+		resp.Response(http.StatusInternalServerError, "获取切片文件列表失败", "")
+	}
+
+	for _, file := range filelist {
+		if file.Name() != "dist.mp4" {
+			os.Remove(filepath.Join(chunkPath, file.Name()))
+		}
+	}
+
+	resp.Response(http.StatusOK, "删除切片", "")
 	return
 }

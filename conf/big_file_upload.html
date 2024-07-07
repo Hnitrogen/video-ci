@@ -32,6 +32,7 @@
 
 
     function uploadFile() {
+        var baseUrl = "http://localhost:9999/"
         var fileInput = document.getElementById('fileInput');
         var file = fileInput.files[0];
 
@@ -54,7 +55,7 @@
 
             // Send the chunk to the server using AJAX or fetch API
             // Replace 'upload-url' with the actual URL to handle the chunk upload on the server
-            fetch('http://localhost:9999/upload/chunk', {
+            fetch(baseUrl + "upload/chunk", {
                 method: 'POST',
                 body: formData
             })
@@ -69,6 +70,20 @@
                     } else {
                         // All chunks uploaded
                         console.log('File upload complete');
+                        // Merge chunks
+                        var MergeUrl = baseUrl + "upload/merge?chunkPath=storage/chunk/" + fileMD5
+                        fetch(MergeUrl ,{
+                            method: 'GET',
+                        }).then(function (resp) {
+                            console.log("Chunk Merge finished")
+
+                            var CleanUrl = baseUrl + "upload/clean?chunkPath=storage/chunk/" + fileMD5
+                            fetch(CleanUrl,{
+                                method: 'GET',
+                            }).then(function (resp) {
+                                console.log("Clean Chunks")
+                            })
+                        })
                     }
                 })
                 .catch(function (error) {
