@@ -47,5 +47,11 @@ func InitRouter() *gin.Engine {
 		})
 	}
 
+	// ffmpeg
+	ffmpeg := r.Group("/ffmpeg")
+	{
+		ffmpeg.GET("/playlist", file_services.PlayList)
+	}
+
 	return r
 }
